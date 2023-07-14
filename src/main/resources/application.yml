@@ -8,9 +8,9 @@ spring:
     init:
       platform: postgresql
   datasource:
-    url: jdbc:postgresql://db.vtrnynwbfugruppqqaez.supabase.co:5432/postgres?user=postgres&password=KuxgTErZ7vi8RYIV
-    username: postgres
-    password: KuxgTErZ7vi8RYIV
+    url: ${URL}
+    username: ${USER_NAME}
+    password: ${PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
