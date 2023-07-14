@@ -10,9 +10,4 @@ class JourneoApplicationTests {
     void contextLoads() {
     }
 
-    @Test
-    void adbs () {
-        assert(true == true);
-    }
-
 }
