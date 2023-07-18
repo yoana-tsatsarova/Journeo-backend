@@ -22,7 +22,7 @@ public class Controller {
     @GetMapping("{country}")
     public JsonNode getmap(@PathVariable String country) {
         try {// Replace with your desired country code
-            String accessToken = "BQBT1hvgyOvzR9AO5qFSTtKtYchvf8oIv7_wsLTEOTZ5XXRSn6MATrUlSInaax-5G5uU3PkYWga0ChQYl1lluoXW1PYWd1FlHLOuDKQr52X7Q5GfRXI"; // Replace with your Spotify access token
+            String accessToken = "BQBlkPIDk_zHinqLj8GElExYXUjPyKBq8-7Qsn4VsWKRzPGBU4VzJKGeHLX5zQOe_KmiC73_3CJi9mnZZaV9wTpnf_ArJY_vmuorLF1Qid5fTSYIhys"; // Replace with your Spotify access token
 
             String url = "https://api.spotify.com/v1/search?q=Top+50+" + country + "&type=playlist&limit=1";
             String authorizationHeader = "Bearer " + accessToken;
