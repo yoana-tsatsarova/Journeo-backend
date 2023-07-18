@@ -13,35 +13,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/")
 public class Controller {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
 
+    private final CountryService service;
+
+    public Controller(CountryService service) {
+        this.service = service;
+    }
+
     @GetMapping("{country}")
-    public JsonNode getmap(@PathVariable String country) {
-        try {// Replace with your desired country code
-            String accessToken = "BQBlkPIDk_zHinqLj8GElExYXUjPyKBq8-7Qsn4VsWKRzPGBU4VzJKGeHLX5zQOe_KmiC73_3CJi9mnZZaV9wTpnf_ArJY_vmuorLF1Qid5fTSYIhys"; // Replace with your Spotify access token
+    public List<String> getmap(@PathVariable String country) {
+        try {
+            String accessToken = service.generateAccessToken();
 
-            String url = "https://api.spotify.com/v1/search?q=Top+50+" + country + "&type=playlist&limit=1";
-            String authorizationHeader = "Bearer " + accessToken;
+            HttpEntity<String> entity = service.generateEntity(accessToken);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", authorizationHeader);
-            HttpEntity<String> entity = new HttpEntity<>(headers);
+            String playlistId = service.fetchPlaylistId(country, entity);
 
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-            String responseBody = response.getBody();
-            JsonNode node = mapper.readTree(responseBody);
-            String id  = node.get("playlists").get("items").get(0).get("id").asText();
+            return service.getTrackIdsForSpecificPlaylist(playlistId, entity);
 
-            String urlId = "https://api.spotify.com/v1/playlists/" + id + "/tracks?offset=0&limit=1";
-            System.out.println(urlId);
-
-                ResponseEntity<String> responseSongs = restTemplate.exchange(urlId, HttpMethod.GET, entity, String.class);
-                JsonNode songsNode = mapper.readTree(responseSongs.getBody());
-                return songsNode.get("items").get(0).get("track").get("id");
         } catch (Exception e) {
             e.printStackTrace();
             return null;
