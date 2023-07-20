@@ -19,5 +19,15 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           cache: 'maven'
+      - name: Use the secret in your workflow
+        env:
+          URL: ${{ secrets.URL }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          OPEN_AI: ${{ secrets.OPEN_AI }}
+          OPEN_AI_URL: ${{ secrets.OPEN_AI_URL }}
+          OPEN_AI_MODEL: ${{ secrets.OPEN_AI_MODEL }}
       - name: Build with Maven
         run: mvn clean test
