@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,7 +18,9 @@ import java.util.List;
 public class Controller {
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final CountryService service;
+    private final CountryService countryService;
+    private final PlaylistService playlistService;
+    private final SongService songService;
 
     @Qualifier("openaiRestTemplate")
     @Autowired
@@ -34,19 +34,24 @@ public class Controller {
 
 
 
-    public Controller(CountryService service) {
-        this.service = service;
+
+
+
+    public Controller(CountryService countryService, PlaylistService playlistService, SongService songService) {
+        this.countryService = countryService;
+        this.playlistService = playlistService;
+        this.songService = songService;
     }
 
     @GetMapping("songs/{country}")
     public List<String> getSongs(@PathVariable String country) {
         try {
-            String accessToken = service.generateAccessToken();
+            String accessToken = countryService.generateAccessToken();
 
-            HttpEntity<String> entity = service.generateEntity(accessToken);
+            HttpEntity<String> entity = countryService.generateEntity(accessToken);
 
-            String playlistId = service.fetchPlaylistId(country, entity);
-            List<String> trackIds = service.getTrackIdsForSpecificPlaylist(playlistId, entity);
+            String playlistId = countryService.fetchPlaylistId(country, entity);
+            List<String> trackIds = countryService.getTrackIdsForSpecificPlaylist(playlistId, entity);
             return trackIds;
 
 
@@ -71,8 +76,26 @@ public class Controller {
         }
     }
 
+    @PostMapping("addsong")
+    public SongDTO addSongToPlaylist(@RequestBody SongDTO songDTO) {
+        Playlist playlist = playlistService.getPlaylistById(1);
+        System.out.println("Playlist" + playlist);
+        if (playlist == null) {
+            playlist = new Playlist(new ArrayList<>());
+            playlistService.savePlaylist(playlist);
+        }
+        System.out.println("Created" + playlist.getId());
 
+        Song song = songService.findSongById(songDTO.songId());
+        if(song == null) {
+            song = new Song(songDTO.songId(), playlist);
+            songService.saveSong(song);
+        }
 
+        playlist.addSong(song);
+        playlistService.savePlaylist(playlist);
+        return songDTO;
+    }
 
 
 }

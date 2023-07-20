@@ -20,9 +20,9 @@ public class CountryService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    CountryRepo repo;
+    PlaylistRepo repo;
 
-    public CountryService(CountryRepo repo) {
+    public CountryService(PlaylistRepo repo) {
         this.repo = repo;
     }
 
