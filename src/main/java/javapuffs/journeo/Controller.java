@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,7 +20,6 @@ public class Controller {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final CountryService countryService;
-    private final PlaylistService playlistService;
     private final SongService songService;
 
     @Qualifier("openaiRestTemplate")
@@ -33,13 +33,8 @@ public class Controller {
     private String apiUrl;
 
 
-
-
-
-
-    public Controller(CountryService countryService, PlaylistService playlistService, SongService songService) {
+    public Controller(CountryService countryService, SongService songService) {
         this.countryService = countryService;
-        this.playlistService = playlistService;
         this.songService = songService;
     }
 
@@ -77,25 +72,25 @@ public class Controller {
     }
 
     @PostMapping("addsong")
-    public SongDTO addSongToPlaylist(@RequestBody SongDTO songDTO) {
-        Playlist playlist = playlistService.getPlaylistById(1);
-        System.out.println("Playlist" + playlist);
-        if (playlist == null) {
-            playlist = new Playlist(new ArrayList<>());
-            playlistService.savePlaylist(playlist);
-        }
-        System.out.println("Created" + playlist.getId());
-
-        Song song = songService.findSongById(songDTO.songId());
+    public void addSongToPlaylist(@RequestBody SongDTO songDTO) {
+        Song song = songService.findSongBySongId(songDTO.songId());
         if(song == null) {
-            song = new Song(songDTO.songId(), playlist);
+            song = new Song(songDTO.songId());
             songService.saveSong(song);
         }
-
-        playlist.addSong(song);
-        playlistService.savePlaylist(playlist);
-        return songDTO;
     }
+
+    @GetMapping("favorites")
+    public List<Song> getFavoriteSongs() {
+        return songService.getAllSongs();
+    }
+
+
+    @DeleteMapping("favorites/{songId}")
+    public void deleteSongFromFavorites(@PathVariable String songId) {
+        songService.deleteSongBySongId(songId);
+    }
+
 
 
 }

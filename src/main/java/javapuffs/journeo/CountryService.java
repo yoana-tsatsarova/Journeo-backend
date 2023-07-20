@@ -20,11 +20,6 @@ public class CountryService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    PlaylistRepo repo;
-
-    public CountryService(PlaylistRepo repo) {
-        this.repo = repo;
-    }
 
     @Value("${CLIENT_SECRET}") // Use the @Value annotation to inject the value of the environment variable
     private String clientSecret;

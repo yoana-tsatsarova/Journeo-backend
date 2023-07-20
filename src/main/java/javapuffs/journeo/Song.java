@@ -9,18 +9,6 @@ public class Song {
     @Id
     private String id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "playlist_id")
-    private Playlist playlist;
-
-    public Playlist getPlaylist() {
-        return playlist;
-    }
-
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -31,9 +19,8 @@ public class Song {
 
     public Song() {}
 
-    public Song(String id, Playlist playlist) {
+    public Song(String id) {
         this.id = id;
-        this.playlist = playlist;
     }
 
 
