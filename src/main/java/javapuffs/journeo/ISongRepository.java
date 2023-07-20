@@ -6,5 +6,4 @@ public interface ISongRepository extends JpaRepository<Song, String> {
 
     Song getSongById(String id);
 
-//    void deleteSongById(String songId);
 }
