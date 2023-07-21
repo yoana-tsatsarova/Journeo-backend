@@ -6,11 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -41,7 +42,6 @@ public class Controller {
     public List<String> getSongs(@PathVariable String country) {
         try {
             String accessToken = countryService.generateAccessToken();
-
             HttpEntity<String> entity = countryService.generateEntity(accessToken);
 
             String playlistId = countryService.fetchPlaylistId(country, entity);
@@ -90,6 +90,39 @@ public class Controller {
         songService.deleteSongBySongId(songId);
     }
 
+    @GetMapping("userid")
+    public String getUserId() {
+        String SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1/me";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String accessToken = countryService.generateAccessToken();
 
 
+        // Set the Authorization header with the access token
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        RequestEntity<Void> requestEntity;
+        try {
+            requestEntity = new RequestEntity<>(headers, HttpMethod.GET, new URI(SPOTIFY_API_BASE_URL));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        // Make the request to the Spotify API
+        ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
+
+        // Parse the JSON response and get the user ID
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            String responseBody = responseEntity.getBody();
+            System.out.println(responseBody);
+            // Parse the responseBody to get the user ID
+            // The user ID is available in the "id" field of the response
+            // Example: String userId = extractUserIdFromResponseBody(responseBody);
+            // Return the user ID
+        }
+
+        return null; // Return null if something went wrong
+    }
 }
