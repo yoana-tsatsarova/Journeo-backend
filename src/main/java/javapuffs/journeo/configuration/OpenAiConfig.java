@@ -1,4 +1,4 @@
-package javapuffs.journeo;
+package javapuffs.journeo.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

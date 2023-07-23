@@ -1,4 +1,6 @@
-package javapuffs.journeo;
+package javapuffs.journeo.dtos;
+
+import javapuffs.journeo.Message;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package javapuffs.journeo;
+package javapuffs.journeo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

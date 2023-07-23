@@ -1,6 +1,7 @@
-package javapuffs.journeo;
+package javapuffs.journeo.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javapuffs.journeo.Song;
+import javapuffs.journeo.repository.ISongRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
