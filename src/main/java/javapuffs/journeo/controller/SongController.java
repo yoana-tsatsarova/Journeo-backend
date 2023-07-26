@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class SongController {
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -51,7 +51,7 @@ public class SongController {
         }
     }
 
-    @GetMapping("/country/coordinates/{country}")
+    @GetMapping("coordinates/{country}")
     public ResponseEntity<JsonNode> getCoordinates(@PathVariable String country) {
         try {
             ChatRequestDTO request = new ChatRequestDTO(model, country);
@@ -76,14 +76,14 @@ public class SongController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("songs/favorites")
+    @GetMapping("favorites")
     public ResponseEntity<List<Song>> getFavoriteSongs() {
         List<Song> favoriteSongs = songService.getAllSongs();
         return ResponseEntity.ok(favoriteSongs);
     }
 
 
-    @DeleteMapping("songs/favorites/{songId}")
+    @DeleteMapping("favorites/{songId}")
     public ResponseEntity<Void> deleteSongFromFavorites(@PathVariable String songId) {
         Song song = songService.findSongBySongId(songId);
         if (song == null) {
